@@ -68,7 +68,7 @@ class Sonus(commands.Bot):
         print(f"Bot version: {__version__}")
         print('-' * 24)
         print("I am logged in and ready!")
-        await self.change_presence(activity=discord.Game("@" + self.user.name + " help"))
+        await self.change_presence(activity=discord.Game("@" + self.user.name + " help | v" + __version__))
 
     async def on_command_error(self, context, exception):
         if isinstance(exception, commands.CommandNotFound):
