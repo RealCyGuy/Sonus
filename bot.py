@@ -9,13 +9,14 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
 load_dotenv()
+os.environ["JISHAKU_NO_UNDERSCORE"] = "true"
 
 
 class Sonus(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned, *args, **kwargs)
         # self.remove_command("help")
-        self.loading_cogs = ["cogs.setup", "cogs.misc"]
+        self.loading_cogs = ["cogs.setup", "cogs.misc", "jishaku"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
         if self.mongo_uri is None or len(self.mongo_uri.strip()) == 0:
