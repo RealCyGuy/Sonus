@@ -85,20 +85,23 @@ class Sonus(commands.Bot):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState,
                                     after: discord.VoiceState):
         await self.wait_until_ready()
-        if before.channel and after.channel:
+        if before.channel == after.channel:
             return
         server = await self.get_server(member.guild.id)
-        if before.channel and len(before.channel.members) == 0:
-            # left channel with no more people
-            if before.channel.id in server["channels"]:
-                # and is a auto created channel
-                try:
-                    await before.channel.delete()
-                except discord.NotFound:
-                    # Already deleted
-                    pass
-                await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
-        elif after.channel.id in server["autochannels"]:
+        before_id, after_id = None, None
+        if before.channel:
+            before_id = before.channel.id
+        if after.channel:
+            after_id = after.channel.id
+        if before_id in server["channels"] and len(before.channel.members) == 0:
+            # left auto created channel with no more people
+            try:
+                await before.channel.delete()
+            except discord.NotFound:
+                # Already deleted
+                pass
+            await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
+        if after_id in server["autochannels"]:
             # joined creating channel
             channel = await after.channel.clone(name="".join(
                 letter for letter in member.display_name if
