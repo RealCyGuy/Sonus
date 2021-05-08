@@ -84,35 +84,30 @@ class Sonus(commands.Bot):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState,
                                     after: discord.VoiceState):
         await self.wait_until_ready()
-        if before.channel == after.channel:
-            return
         server = await self.get_server(member.guild.id)
-        before_id, after_id = None, None
         if before.channel:
-            before_id = before.channel.id
+            if before.channel.id in server["channels"] and len(before.channel.members) == 0:
+                # left auto created channel with no more people
+                try:
+                    await before.channel.delete()
+                except discord.NotFound:
+                    # Already deleted
+                    pass
+                await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
         if after.channel:
-            after_id = after.channel.id
-        if before_id in server["channels"] and len(before.channel.members) == 0:
-            # left auto created channel with no more people
-            try:
-                await before.channel.delete()
-            except discord.NotFound:
-                # Already deleted
-                pass
-            await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
-        if after_id in server["autochannels"]:
-            # joined creating channel
-            channel = await after.channel.clone(name="".join(
-                letter for letter in member.display_name if
-                letter not in string.punctuation and letter.isprintable()) + "'s voice call")
-            await channel.edit(position=after.channel.position + 1)
-            await member.move_to(channel)
-            server["channels"].append(channel.id)
-            await self.servers.find_one_and_update(
-                {"_id": str(member.guild.id)},
-                {"$set": {"channels": server["channels"]}},
-                upsert=True,
-            )
+            if after.channel.id in server["autochannels"]:
+                # joined creating channel
+                channel = await after.channel.clone(name="".join(
+                    letter for letter in member.display_name if
+                    letter not in string.punctuation and letter.isprintable()) + "'s voice call")
+                await channel.edit(position=after.channel.position + 1)
+                await member.move_to(channel)
+                server["channels"].append(channel.id)
+                await self.servers.find_one_and_update(
+                    {"_id": str(member.guild.id)},
+                    {"$set": {"channels": server["channels"]}},
+                    upsert=True,
+                )
 
     async def on_guild_channel_delete(self, channel):
         server = await self.get_server(channel.guild.id)
