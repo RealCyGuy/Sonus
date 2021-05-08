@@ -71,7 +71,7 @@ class Sonus(commands.Bot):
 
     async def on_command_error(self, context, exception):
         if isinstance(exception, commands.CommandNotFound):
-            print("CommandNotFound: " + str(exception))
+            await context.send(f"Command not found. Use `@{context.me.display_name} help` for help.")
         elif isinstance(exception, commands.MissingRequiredArgument):
             await context.send_help(context.command)
         elif isinstance(exception, commands.CommandOnCooldown):
