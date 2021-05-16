@@ -17,7 +17,7 @@ class Setup(commands.Cog):
         """
         server = await self.bot.get_server(ctx.guild.id)
         channel = await ctx.guild.create_voice_channel("start vc!")
-        server["autochannels"].append(channel.id)
+        server["autochannels"][str(channel.id)] = None
         await self.bot.servers.find_one_and_update(
             {"_id": str(ctx.guild.id)},
             {"$set": {"autochannels": server["autochannels"]}},
