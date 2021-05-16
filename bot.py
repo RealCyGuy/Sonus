@@ -93,7 +93,6 @@ class Sonus(commands.Bot):
                                     after: discord.VoiceState):
         await self.wait_until_ready()
         server = await self.get_server(member.guild.id)
-        print(server)
         if before.channel:
             if str(before.channel.id) in server["channels"] and len(before.channel.members) == 0:
                 # left auto created channel with no more people
