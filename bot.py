@@ -43,15 +43,23 @@ class Sonus(commands.Bot):
         if new_server is None:
             await self.servers.find_one_and_update(
                 {"_id": server_id},
-                {"$set": {"channels": list(), "autochannels": list()}},
+                {"$set": {"channels": dict(), "autochannels": dict()}},
+                upsert=True,
+            )
+            new_server = await self.servers.find_one({"_id": server_id})
+        elif type(new_server["channels"]) is list:
+            await self.servers.find_one_and_update(
+                {"_id": server_id},
+                {"$set": {"channels": dict.fromkeys(map(str, new_server["channels"])),
+                          "autochannels": dict.fromkeys(map(str, new_server["autochannels"]))}},
                 upsert=True,
             )
             new_server = await self.servers.find_one({"_id": server_id})
         return new_server
 
-    async def delete_channel(self, server_id: int, channel_id: int, channels: list):
+    async def delete_channel(self, server_id: int, channel_id: int, channels: dict):
         server_id = str(server_id)
-        channels.remove(channel_id)
+        channels.pop(channel_id)
         await self.servers.find_one_and_update(
             {"_id": server_id},
             {"$set": {"channels": channels}},
@@ -85,8 +93,9 @@ class Sonus(commands.Bot):
                                     after: discord.VoiceState):
         await self.wait_until_ready()
         server = await self.get_server(member.guild.id)
+        print(server)
         if before.channel:
-            if before.channel.id in server["channels"] and len(before.channel.members) == 0:
+            if str(before.channel.id) in server["channels"] and len(before.channel.members) == 0:
                 # left auto created channel with no more people
                 try:
                     await before.channel.delete()
@@ -95,14 +104,17 @@ class Sonus(commands.Bot):
                     pass
                 await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
         if after.channel:
-            if after.channel.id in server["autochannels"]:
+            if str(after.channel.id) in server["autochannels"]:
                 # joined creating channel
                 channel = await after.channel.clone(name="".join(
                     letter for letter in member.display_name if
                     letter not in string.punctuation and letter.isprintable()) + "'s voice call")
                 await channel.edit(position=after.channel.position + 1)
                 await member.move_to(channel)
-                server["channels"].append(channel.id)
+                server["channels"][str(channel.id)] = {
+                    "creator": member.id,
+                    "autochannel": after.channel.id
+                }
                 await self.servers.find_one_and_update(
                     {"_id": str(member.guild.id)},
                     {"$set": {"channels": server["channels"]}},
@@ -112,7 +124,7 @@ class Sonus(commands.Bot):
     async def on_guild_channel_delete(self, channel):
         server = await self.get_server(channel.guild.id)
         if channel.id in server["autochannels"]:
-            server["autochannels"].remove(channel.id)
+            del server["autochannels"][str(channel.id)]
             await self.servers.find_one_and_update(
                 {"_id": str(channel.guild.id)},
                 {"$set": {"autochannels": server["autochannels"]}},
