@@ -95,6 +95,7 @@ class Misc(commands.Cog):
         )
         self.bot.help_command.cog = self
 
+    @commands.cooldown(1, 4, commands.BucketType.member)
     @commands.command(aliases=["add", "inv", "coolbotcanihaveitinmyserver"])
     async def invite(self, ctx: Context):
         """
@@ -106,6 +107,7 @@ class Misc(commands.Cog):
             "Here's my invite link: https://discord.com/oauth2/authorize?client_id=" + str(
                 self.bot.user.id) + "&permissions=16844816&scope=bot")
 
+    @commands.cooldown(1, 4, commands.BucketType.member)
     @commands.command(aliases=["source"])
     async def github(self, ctx: Context):
         """

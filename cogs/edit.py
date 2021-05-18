@@ -10,6 +10,7 @@ class Edit(commands.Cog):
 
     @commands.command(aliases=["name"])
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     async def rename(self, ctx: Context, *, name):
         """
@@ -26,6 +27,7 @@ class Edit(commands.Cog):
 
     @commands.command(aliases=["lock"])
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     async def limit(self, ctx: Context, limit: int = 0):
         """

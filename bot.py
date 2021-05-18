@@ -86,7 +86,7 @@ class Sonus(commands.Bot):
             await context.send_help(context.command)
         elif isinstance(exception, commands.CommandOnCooldown):
             await context.send(f"This command is on cooldown. Try again in {exception.retry_after:.2f}s.")
-        elif isinstance(exception, commands.MissingPermissions) or isinstance(exception, commands.NoPrivateMessage):
+        elif isinstance(exception, commands.MissingPermissions) or isinstance(exception, commands.NoPrivateMessage) or isinstance(exception, commands.CommandOnCooldown):
             await context.send(exception)
         elif isinstance(exception, commands.CheckFailure):
             await context.send(context.command.checks[0].fail_msg)
