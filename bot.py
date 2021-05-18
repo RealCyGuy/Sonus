@@ -15,7 +15,7 @@ class Sonus(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned, *args, **kwargs)
         # self.remove_command("help")
-        self.loading_cogs = ["cogs.setup", "cogs.misc"]
+        self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
         if self.mongo_uri is None or len(self.mongo_uri.strip()) == 0:
@@ -39,23 +39,23 @@ class Sonus(commands.Bot):
 
     async def get_server(self, server_id: int):
         server_id = str(server_id)
-        new_server = await self.servers.find_one({"_id": server_id})
-        if new_server is None:
+        server = await self.servers.find_one({"_id": server_id})
+        if server is None:
             await self.servers.find_one_and_update(
                 {"_id": server_id},
                 {"$set": {"channels": dict(), "autochannels": dict()}},
                 upsert=True,
             )
-            new_server = await self.servers.find_one({"_id": server_id})
-        elif type(new_server["channels"]) is list:
+            server = await self.servers.find_one({"_id": server_id})
+        elif type(server["channels"]) is list:
             await self.servers.find_one_and_update(
                 {"_id": server_id},
-                {"$set": {"channels": dict.fromkeys(map(str, new_server["channels"])),
-                          "autochannels": dict.fromkeys(map(str, new_server["autochannels"]))}},
+                {"$set": {"channels": dict.fromkeys(map(str, server["channels"])),
+                          "autochannels": dict.fromkeys(map(str, server["autochannels"]))}},
                 upsert=True,
             )
-            new_server = await self.servers.find_one({"_id": server_id})
-        return new_server
+            server = await self.servers.find_one({"_id": server_id})
+        return server
 
     async def delete_channel(self, server_id: int, channel_id: int, channels: dict):
         server_id = str(server_id)
@@ -86,6 +86,8 @@ class Sonus(commands.Bot):
             await context.send(f"This command is on cooldown. Try again in {exception.retry_after:.2f}s.")
         elif isinstance(exception, commands.MissingPermissions) or isinstance(exception, commands.NoPrivateMessage):
             await context.send(exception)
+        elif isinstance(exception, commands.CheckFailure):
+            await context.send(context.command.checks[0].fail_msg)
         else:
             print("Unexpected exception:", type(exception).__name__ + ":", exception)
 
