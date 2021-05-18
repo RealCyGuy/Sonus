@@ -13,22 +13,26 @@ class SonusHelpCommand(commands.HelpCommand):
         cog_commands = [cog.get_commands() for cog in cogs]
 
         help_embed = discord.Embed(
-            description=f"Sonus is a fast, simple, and [open-source](https://github.com/realcyguy/Sonus \"GitHub\") "
-                        f"auto voice channel discord bot created by [Cyrus Yip](https://realcyguy.netlify.app "
-                        f"\"realcyguy.netlify.app\").\nYou can get started by using `{self.clean_prefix}create`.")
+            description=f'Sonus is a fast, simple, and [open-source](https://github.com/realcyguy/Sonus "GitHub") '
+            f"auto voice channel discord bot created by [Cyrus Yip](https://realcyguy.netlify.app "
+            f'"realcyguy.netlify.app").\nYou can get started by using `{self.clean_prefix}create`.'
+        )
         help_embed.set_author(name=bot.user, icon_url=bot.user.avatar_url)
         help_embed.colour = 2228207
-        help_embed.set_footer(text=f"Use {self.clean_prefix}help [command] to get help for a specific command.")
+        help_embed.set_footer(
+            text=f"Use {self.clean_prefix}help [command] to get help for a specific command."
+        )
 
         for cog_command in cog_commands:
-            value = '\n'.join(
-                [f"**{self.clean_prefix}{command.qualified_name}** - *{command.short_doc.strip()}*" for command in
-                 cog_command])
+            value = "\n".join(
+                [
+                    f"**{self.clean_prefix}{command.qualified_name}** - *{command.short_doc.strip()}*"
+                    for command in cog_command
+                ]
+            )
             value = value.replace(" - **", "")
             help_embed.add_field(
-                name=cog_command[0].cog_name,
-                value=value,
-                inline=False
+                name=cog_command[0].cog_name, value=value, inline=False
             )
         await self.get_destination().send(embed=help_embed)
 
@@ -38,16 +42,30 @@ class SonusHelpCommand(commands.HelpCommand):
         help_embed = discord.Embed()
         help_embed.set_author(name=bot.user, icon_url=bot.user.avatar_url)
         help_embed.colour = 2228207
-        help_embed.set_footer(text=f"Use {self.clean_prefix}help [command] to get help for a specific command.")
+        help_embed.set_footer(
+            text=f"Use {self.clean_prefix}help [command] to get help for a specific command."
+        )
 
-        help_embed.title = f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+        help_embed.title = (
+            f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+        )
         description = command.help.split("~")
-        help_embed.add_field(name="Description", value=description[0].replace("{prefix}", self.clean_prefix))
-        help_embed.add_field(name="Usage",
-                             value="```" + description[1].strip("\n ").replace("{prefix}", self.clean_prefix) + "```")
+        help_embed.add_field(
+            name="Description",
+            value=description[0].replace("{prefix}", self.clean_prefix),
+        )
+        help_embed.add_field(
+            name="Usage",
+            value="```"
+            + description[1].strip("\n ").replace("{prefix}", self.clean_prefix)
+            + "```",
+        )
         try:
-            help_embed.add_field(name="Note", value=description[2].replace("{prefix}", self.clean_prefix),
-                                 inline=False)
+            help_embed.add_field(
+                name="Note",
+                value=description[2].replace("{prefix}", self.clean_prefix),
+                inline=False,
+            )
         except IndexError:
             pass
         if command.aliases:
@@ -56,9 +74,12 @@ class SonusHelpCommand(commands.HelpCommand):
             aliases = "No aliases."
         help_embed.add_field(name="Aliases", value=aliases, inline=False)
         help_embed.set_footer(
-            text=f"Use {self.clean_prefix}help to see all the commands." +
-                 "\n" + "\u2501" * 40 + "\n" +
-                 "[]'s are optional arguments. <>'s are required arguments.")
+            text=f"Use {self.clean_prefix}help to see all the commands."
+            + "\n"
+            + "\u2501" * 40
+            + "\n"
+            + "[]'s are optional arguments. <>'s are required arguments."
+        )
         await self.get_destination().send(embed=help_embed)
 
     async def send_error_message(self, error):
@@ -73,7 +94,9 @@ class SonusHelpCommand(commands.HelpCommand):
         if not closest:
             closest = get_close_matches(command, command_names, 1, 0)
         closest = "` or `".join(closest)
-        embed = discord.Embed(description=f"Command `{command}` not found. Did you mean `{closest}`?")
+        embed = discord.Embed(
+            description=f"Command `{command}` not found. Did you mean `{closest}`?"
+        )
         embed.colour = 2228207
         await self.get_destination().send(embed=embed)
 
@@ -84,8 +107,7 @@ class Misc(commands.Cog):
         self.bot.help_command = SonusHelpCommand(
             verify_checks=False,
             command_attrs={
-                "help":
-                    """
+                "help": """
                     Shows this help message.
                     ~
                     {prefix}help
@@ -104,8 +126,10 @@ class Misc(commands.Cog):
         {prefix}invite
         """
         await ctx.send(
-            "Here's my invite link: https://discord.com/oauth2/authorize?client_id=" + str(
-                self.bot.user.id) + "&permissions=16844816&scope=bot")
+            "Here's my invite link: https://discord.com/oauth2/authorize?client_id="
+            + str(self.bot.user.id)
+            + "&permissions=16844816&scope=bot"
+        )
 
     @commands.cooldown(1, 4, commands.BucketType.member)
     @commands.command(aliases=["source"])
@@ -115,7 +139,9 @@ class Misc(commands.Cog):
         ~
         {prefix}github
         """
-        await ctx.send("You can find the source here: https://github.com/realcyguy/sonus")
+        await ctx.send(
+            "You can find the source here: https://github.com/realcyguy/sonus"
+        )
 
 
 def setup(bot):

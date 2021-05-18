@@ -13,6 +13,8 @@ def is_channel_owner():
 
         return False
 
-    predicate.fail_msg = "You have to be in a voice channel that you created with Sonus."
+    predicate.fail_msg = (
+        "You have to be in a voice channel that you created with Sonus."
+    )
 
     return commands.check(predicate)

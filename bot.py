@@ -15,8 +15,13 @@ class Sonus(commands.Bot):
     def __init__(self, *args, **kwargs):
         intents = discord.Intents.default()
         intents.members = True
-        super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents, *args,
-                         **kwargs)
+        super().__init__(
+            command_prefix=commands.when_mentioned,
+            case_insensitive=True,
+            intents=intents,
+            *args,
+            **kwargs,
+        )
         self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
@@ -52,8 +57,12 @@ class Sonus(commands.Bot):
         elif type(server["channels"]) is list:
             await self.servers.find_one_and_update(
                 {"_id": server_id},
-                {"$set": {"channels": dict.fromkeys(map(str, server["channels"])),
-                          "autochannels": dict.fromkeys(map(str, server["autochannels"]))}},
+                {
+                    "$set": {
+                        "channels": dict.fromkeys(map(str, server["channels"])),
+                        "autochannels": dict.fromkeys(map(str, server["autochannels"])),
+                    }
+                },
                 upsert=True,
             )
             server = await self.servers.find_one({"_id": server_id})
@@ -63,9 +72,7 @@ class Sonus(commands.Bot):
         server_id = str(server_id)
         channels.pop(str(channel_id))
         await self.servers.find_one_and_update(
-            {"_id": server_id},
-            {"$set": {"channels": channels}},
-            upsert=True,
+            {"_id": server_id}, {"$set": {"channels": channels}}, upsert=True,
         )
 
     async def on_ready(self):
@@ -77,48 +84,70 @@ class Sonus(commands.Bot):
         print(f"Bot version: {__version__}")
         print("-" * 24)
         print("I am logged in and ready!")
-        await self.change_presence(activity=discord.Game("@" + self.user.name + " help | v" + __version__))
+        await self.change_presence(
+            activity=discord.Game("@" + self.user.name + " help | v" + __version__)
+        )
 
     async def on_command_error(self, context, exception):
         if isinstance(exception, commands.CommandNotFound):
-            await context.send(f"Command not found. Use `@{context.me.display_name} help` for help.")
+            await context.send(
+                f"Command not found. Use `@{context.me.display_name} help` for help."
+            )
         elif isinstance(exception, commands.MissingRequiredArgument):
             await context.send_help(context.command)
         elif isinstance(exception, commands.CommandOnCooldown):
-            await context.send(f"This command is on cooldown. Try again in {exception.retry_after:.2f}s.")
-        elif isinstance(exception, commands.MissingPermissions) or isinstance(exception,
-                                                                              commands.NoPrivateMessage) or isinstance(
-                exception, commands.CommandOnCooldown):
+            await context.send(
+                f"This command is on cooldown. Try again in {exception.retry_after:.2f}s."
+            )
+        elif (
+            isinstance(exception, commands.MissingPermissions)
+            or isinstance(exception, commands.NoPrivateMessage)
+            or isinstance(exception, commands.CommandOnCooldown)
+        ):
             await context.send(exception)
         elif isinstance(exception, commands.CheckFailure):
             await context.send(context.command.checks[0].fail_msg)
         else:
             print("Unexpected exception:", type(exception).__name__ + ":", exception)
 
-    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState,
-                                    after: discord.VoiceState):
+    async def on_voice_state_update(
+        self,
+        member: discord.Member,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
+    ):
         await self.wait_until_ready()
         server = await self.get_server(member.guild.id)
         if before.channel:
-            if str(before.channel.id) in server["channels"] and len(before.channel.members) == 0:
+            if (
+                str(before.channel.id) in server["channels"]
+                and len(before.channel.members) == 0
+            ):
                 # left auto created channel with no more people
                 try:
                     await before.channel.delete()
                 except discord.NotFound:
                     # Already deleted
                     pass
-                await self.delete_channel(member.guild.id, before.channel.id, server["channels"])
+                await self.delete_channel(
+                    member.guild.id, before.channel.id, server["channels"]
+                )
         if after.channel:
             if str(after.channel.id) in server["autochannels"]:
                 # joined creating channel
-                channel = await after.channel.clone(name="".join(
-                    letter for letter in member.display_name if
-                    letter not in string.punctuation and letter.isprintable()) + "'s voice call")
+                channel = await after.channel.clone(
+                    name="".join(
+                        letter
+                        for letter in member.display_name
+                        if letter not in string.punctuation and letter.isprintable()
+                    )
+                    + "'s voice call"
+                )
                 await channel.edit(position=after.channel.position + 1)
                 await member.move_to(channel)
                 server["channels"][str(channel.id)] = {
                     "creator": member.id,
-                    "autochannel": after.channel.id
+                    "autochannel": after.channel.id,
                 }
                 await self.servers.find_one_and_update(
                     {"_id": str(member.guild.id)},

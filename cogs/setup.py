@@ -24,7 +24,8 @@ class Setup(commands.Cog):
             upsert=True,
         )
         await ctx.send(
-            f"Created voice channel with an id of `{channel.id}`. You can rename and move it and I'll automatically create voice channels!")
+            f"Created voice channel with an id of `{channel.id}`. You can rename and move it and I'll automatically create voice channels!"
+        )
 
 
 def setup(bot):
