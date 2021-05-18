@@ -16,7 +16,6 @@ class Sonus(commands.Bot):
         intents = discord.Intents.default()
         intents.members = True
         super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents, *args, **kwargs)
-        # self.remove_command("help")
         self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
