@@ -24,6 +24,29 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Renamed channel to `{name}`.")
 
+    @commands.command(aliases=["lock"])
+    @commands.guild_only()
+    @is_channel_owner()
+    async def limit(self, ctx: Context, limit: int = 0):
+        """
+        Add a member limit to your voice channel.
+        Leave limit blank to remove the current limit or make the limit equal to the number of users in the call.
+        ~
+        {prefix}limit
+        {prefix}limit 5
+        """
+        if limit < 0:
+            return await ctx.send("Limit cannot be negative.")
+        elif limit > 100:
+            return await ctx.send("Limit has to be under 100.")
+        if limit == 0 and ctx.author.voice.channel.user_limit == 0:
+            limit = len(ctx.author.voice.channel.members)
+        try:
+            await ctx.author.voice.channel.edit(user_limit=limit)
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
+        await ctx.send(f"Changed limit to `{limit}`.")
+
 
 def setup(bot):
     bot.add_cog(Edit(bot))

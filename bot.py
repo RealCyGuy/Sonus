@@ -13,7 +13,9 @@ load_dotenv()
 
 class Sonus(commands.Bot):
     def __init__(self, *args, **kwargs):
-        super().__init__(command_prefix=commands.when_mentioned, *args, **kwargs)
+        intents = discord.Intents.default()
+        intents.members = True
+        super().__init__(command_prefix=commands.when_mentioned, intents=intents, *args, **kwargs)
         # self.remove_command("help")
         self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
