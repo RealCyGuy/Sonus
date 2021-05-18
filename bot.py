@@ -26,10 +26,10 @@ class Sonus(commands.Bot):
         self.db = AsyncIOMotorClient(self.mongo_uri).sonus
         self.servers = self.db.servers
         # Startup message
-        print('=' * 24)
+        print("=" * 24)
         print("Sonus")
         print("By: Cyrus")
-        print('=' * 24)
+        print("=" * 24)
         # Load cogs
         for cog in self.loading_cogs:
             print(f"Loading {cog}...")
@@ -69,13 +69,13 @@ class Sonus(commands.Bot):
         )
 
     async def on_ready(self):
-        print('-' * 24)
-        print('Logged in as:')
+        print("-" * 24)
+        print("Logged in as:")
         print(self.user.name + "#" + self.user.discriminator)
         print("Id: " + str(self.user.id))
         print(f"Discord version: {discord.__version__}")
         print(f"Bot version: {__version__}")
-        print('-' * 24)
+        print("-" * 24)
         print("I am logged in and ready!")
         await self.change_presence(activity=discord.Game("@" + self.user.name + " help | v" + __version__))
 
