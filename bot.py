@@ -59,7 +59,7 @@ class Sonus(commands.Bot):
 
     async def delete_channel(self, server_id: int, channel_id: int, channels: dict):
         server_id = str(server_id)
-        channels.pop(channel_id)
+        channels.pop(str(channel_id))
         await self.servers.find_one_and_update(
             {"_id": server_id},
             {"$set": {"channels": channels}},
