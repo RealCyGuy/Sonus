@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 from core.checks import is_channel_owner
 
 
-class Setup(commands.Cog):
+class Edit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -26,4 +26,4 @@ class Setup(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Setup(bot))
+    bot.add_cog(Edit(bot))

@@ -9,7 +9,7 @@ class SonusHelpCommand(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         bot = self.context.bot
 
-        cogs = [bot.get_cog("Setup"), bot.get_cog("Misc")]
+        cogs = [bot.get_cog("Setup"), bot.get_cog("Edit"), bot.get_cog("Misc")]
         cog_commands = [cog.get_commands() for cog in cogs]
 
         help_embed = discord.Embed(
