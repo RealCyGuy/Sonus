@@ -11,7 +11,7 @@ class Edit(commands.Cog):
     @commands.command(aliases=["name"])
     @commands.guild_only()
     @is_channel_owner()
-    async def rename(self, ctx: Context, name):
+    async def rename(self, ctx: Context, *, name):
         """
         Rename your voice channel.
         ~
