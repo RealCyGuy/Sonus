@@ -27,7 +27,8 @@ class SonusHelpCommand(commands.HelpCommand):
             value = value.replace(" - **", "")
             help_embed.add_field(
                 name=cog_command[0].cog_name,
-                value=value
+                value=value,
+                inline=False
             )
         await self.get_destination().send(embed=help_embed)
 
