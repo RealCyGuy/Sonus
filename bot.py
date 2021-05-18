@@ -15,7 +15,8 @@ class Sonus(commands.Bot):
     def __init__(self, *args, **kwargs):
         intents = discord.Intents.default()
         intents.members = True
-        super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents, *args, **kwargs)
+        super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents, *args,
+                         **kwargs)
         self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
@@ -85,7 +86,9 @@ class Sonus(commands.Bot):
             await context.send_help(context.command)
         elif isinstance(exception, commands.CommandOnCooldown):
             await context.send(f"This command is on cooldown. Try again in {exception.retry_after:.2f}s.")
-        elif isinstance(exception, commands.MissingPermissions) or isinstance(exception, commands.NoPrivateMessage) or isinstance(exception, commands.CommandOnCooldown):
+        elif isinstance(exception, commands.MissingPermissions) or isinstance(exception,
+                                                                              commands.NoPrivateMessage) or isinstance(
+                exception, commands.CommandOnCooldown):
             await context.send(exception)
         elif isinstance(exception, commands.CheckFailure):
             await context.send(context.command.checks[0].fail_msg)
