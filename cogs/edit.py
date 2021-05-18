@@ -20,8 +20,8 @@ class Edit(commands.Cog):
         """
         try:
             await ctx.author.voice.channel.edit(name=name)
-        except:
-            return await ctx.send("An error occured.")
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Renamed channel to `{name}`.")
 
 
