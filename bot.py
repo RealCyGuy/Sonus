@@ -104,7 +104,11 @@ class Sonus(commands.Bot):
         ):
             await context.send(exception)
         elif isinstance(exception, commands.CheckFailure):
-            await context.send(context.command.checks[0].fail_msg)
+            msg = ""
+            for check in context.command.checks:
+                if hasattr(check, "fail_msg"):
+                    msg += check.fail_msg + " "
+            await context.send(msg)
         else:
             print("Unexpected exception:", type(exception).__name__ + ":", exception)
 

@@ -117,8 +117,8 @@ class Misc(commands.Cog):
         )
         self.bot.help_command.cog = self
 
-    @commands.cooldown(1, 4, commands.BucketType.member)
     @commands.command(aliases=["add", "inv", "coolbotcanihaveitinmyserver"])
+    @commands.cooldown(1, 4, commands.BucketType.member)
     async def invite(self, ctx: Context):
         """
         Get the invite link of the bot.
@@ -131,8 +131,8 @@ class Misc(commands.Cog):
             + "&permissions=16844816&scope=bot"
         )
 
-    @commands.cooldown(1, 4, commands.BucketType.member)
     @commands.command(aliases=["source"])
+    @commands.cooldown(1, 4, commands.BucketType.member)
     async def github(self, ctx: Context):
         """
         Get the link to the GitHub repository.

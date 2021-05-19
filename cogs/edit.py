@@ -9,9 +9,9 @@ class Edit(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["name"])
-    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
+    @commands.guild_only()
     async def rename(self, ctx: Context, *, name):
         """
         Rename your voice channel.
@@ -26,9 +26,9 @@ class Edit(commands.Cog):
         await ctx.send(f"Renamed channel to `{name}`.")
 
     @commands.command(aliases=["lock"])
-    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
+    @commands.guild_only()
     async def limit(self, ctx: Context, limit: int = 0):
         """
         Add a member limit to your voice channel.
