@@ -4,7 +4,7 @@ import os
 import string
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -84,9 +84,7 @@ class Sonus(commands.Bot):
         print(f"Bot version: {__version__}")
         print("-" * 24)
         print("I am logged in and ready!")
-        await self.change_presence(
-            activity=discord.Game("@" + self.user.name + " help | v" + __version__)
-        )
+        await self.update_status.start()
 
     async def on_command_error(self, context, exception):
         if isinstance(exception, commands.CommandNotFound):
@@ -164,6 +162,20 @@ class Sonus(commands.Bot):
                 {"$set": {"autochannels": server["autochannels"]}},
                 upsert=True,
             )
+
+    @tasks.loop(minutes=2)
+    async def update_status(self):
+        await self.change_presence(
+            activity=discord.Game(
+                "@"
+                + self.user.name
+                + " help | v"
+                + __version__
+                + " | "
+                + str(len(self.guilds))
+                + " servers"
+            )
+        )
 
 
 bot = Sonus()
