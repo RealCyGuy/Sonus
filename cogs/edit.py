@@ -49,6 +49,25 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Changed limit to `{limit}`.")
 
+    @commands.command(aliases=["rate"])
+    @commands.cooldown(1, 10, commands.BucketType.member)
+    @is_channel_owner()
+    @commands.guild_only()
+    async def bitrate(self, ctx: Context, rate: int):
+        """
+        Change the channel's bitrate.
+        ~
+        {prefix}bitrate 32
+        {prefix}bitrate 64
+        """
+        if rate < 8 or rate > 96:
+            return await ctx.send("Limit has to be from 8-96kbps.")
+        try:
+            await ctx.author.voice.channel.edit(bitrate=rate * 1000)
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
+        await ctx.send(f"Changed bitrate to `{rate}` kbps.")
+
 
 def setup(bot):
     bot.add_cog(Edit(bot))
