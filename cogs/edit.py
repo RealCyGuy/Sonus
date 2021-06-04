@@ -95,6 +95,26 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Banned {name}.")
 
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.member)
+    @is_channel_owner()
+    @commands.guild_only()
+    async def unban(self, ctx: Context, *, user: discord.Member):
+        """
+        Unbans a user from joining the channel.
+        ~
+        {prefix}unban random guy
+        {prefix}unban 543225108135673877
+        """
+        name = user.name + "#" + user.discriminator
+        try:
+            await ctx.author.voice.channel.set_permissions(
+                user, connect=None, reason=f"Unbanned from voice channel by {name}.",
+            )
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
+        await ctx.send(f"Unbanned {name}.")
+
 
 def setup(bot):
     bot.add_cog(Edit(bot))
