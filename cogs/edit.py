@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -67,6 +68,32 @@ class Edit(commands.Cog):
         except Exception as e:
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Changed bitrate to `{rate}` kbps.")
+
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.member)
+    @is_channel_owner()
+    @commands.guild_only()
+    async def ban(self, ctx: Context, *, user: discord.Member):
+        """
+        Remove's join permissions and kicks out a user.
+        ~
+        {prefix}ban @RealCyGuy#0001
+        {prefix}ban 543225108135673877
+        """
+        name = user.name + "#" + user.discriminator
+        try:
+            await ctx.author.voice.channel.set_permissions(
+                user, connect=False, reason=f"Banned from voice channel by {name}.",
+            )
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
+        try:
+            await user.edit(
+                voice_channel=None, reason="Kicked from voice channel by {name}."
+            )
+        except Exception as e:
+            return await ctx.send("An error occured: " + str(e))
+        await ctx.send(f"Banned {name}.")
 
 
 def setup(bot):

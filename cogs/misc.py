@@ -128,7 +128,7 @@ class Misc(commands.Cog):
         await ctx.send(
             "Here's my invite link: https://discord.com/oauth2/authorize?client_id="
             + str(self.bot.user.id)
-            + "&permissions=16844816&scope=bot"
+            + "&permissions=285280272&scope=bot"
         )
 
     @commands.command(aliases=["source"])
