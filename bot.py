@@ -101,6 +101,7 @@ class Sonus(commands.Bot):
             isinstance(exception, commands.MissingPermissions)
             or isinstance(exception, commands.NoPrivateMessage)
             or isinstance(exception, commands.CommandOnCooldown)
+            or isinstance(exception, commands.MemberNotFound)
         ):
             await context.send(exception)
         elif isinstance(exception, commands.CheckFailure):
