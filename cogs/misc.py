@@ -140,15 +140,15 @@ class Misc(commands.Cog):
                 [
                     Button(
                         style=ButtonStyle.URL,
-                        label="GitHub",
-                        url="https://github.com/realcyguy/sonus",
-                    ),
-                    Button(
-                        style=ButtonStyle.URL,
                         label="Invite",
                         url="https://discord.com/oauth2/authorize?client_id="
                         + str(self.bot.user.id)
                         + "&permissions=285280272&scope=bot",
+                    ),
+                    Button(
+                        style=ButtonStyle.URL,
+                        label="GitHub",
+                        url="https://github.com/realcyguy/sonus",
                     ),
                     Button(
                         style=ButtonStyle.URL,
