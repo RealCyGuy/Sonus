@@ -14,9 +14,7 @@ class SonusHelpCommand(commands.HelpCommand):
         cog_commands = [cog.get_commands() for cog in cogs]
 
         help_embed = discord.Embed(
-            description=f'Sonus is a fast, simple, and [open-source](https://github.com/realcyguy/Sonus "GitHub") '
-            f"auto voice channel discord bot created by [Cyrus Yip](https://realcyguy.netlify.app "
-            f'"realcyguy.netlify.app").\nYou can get started by using `{self.clean_prefix}create`.'
+            description=f"You can get started by using `{self.clean_prefix}create`."
         )
         help_embed.set_author(name=bot.user, icon_url=bot.user.avatar_url)
         help_embed.colour = 2228207
