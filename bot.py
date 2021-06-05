@@ -5,6 +5,7 @@ import string
 
 import discord
 from discord.ext import commands, tasks
+from discord_components import DiscordComponents
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -76,6 +77,7 @@ class Sonus(commands.Bot):
         )
 
     async def on_ready(self):
+        DiscordComponents(self)
         print("-" * 24)
         print("Logged in as:")
         print(self.user.name + "#" + self.user.discriminator)

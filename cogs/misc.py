@@ -3,6 +3,7 @@ from difflib import get_close_matches
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
+from discord_components import ButtonStyle, Button
 
 
 class SonusHelpCommand(commands.HelpCommand):
@@ -116,6 +117,44 @@ class Misc(commands.Cog):
             },
         )
         self.bot.help_command.cog = self
+
+    @commands.command(aliases=["who", "what", "when", "where", "why"])
+    @commands.cooldown(1, 4, commands.BucketType.member)
+    async def about(self, ctx: Context):
+        """
+        Get info and links!
+        ~
+        {prefix}about
+        """
+        embed = discord.Embed(
+            description="Sonus is a fast, simple, and open-source auto voice channel discord bot created by Cyrus Yip."
+            + "\nYou can view all the commands with `@Sonus help`."
+        )
+        embed.colour = 2228207
+        await ctx.send(
+            embed=embed,
+            components=[
+                [
+                    Button(
+                        style=ButtonStyle.URL,
+                        label="GitHub",
+                        url="https://github.com/realcyguy/sonus",
+                    ),
+                    Button(
+                        style=ButtonStyle.URL,
+                        label="Invite",
+                        url="https://discord.com/oauth2/authorize?client_id="
+                        + str(self.bot.user.id)
+                        + "&permissions=285280272&scope=bot",
+                    ),
+                    Button(
+                        style=ButtonStyle.URL,
+                        label="Cyrus Yip",
+                        url="https://realcyguy.netlify.app",
+                    ),
+                ]
+            ],
+        )
 
     @commands.command(aliases=["add", "inv", "coolbotcanihaveitinmyserver"])
     @commands.cooldown(1, 4, commands.BucketType.member)
