@@ -5,6 +5,8 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from discord_components import ButtonStyle, Button
 
+from bot import __version__
+
 
 class SonusHelpCommand(commands.HelpCommand):
     async def send_bot_help(self, mapping):
@@ -129,6 +131,9 @@ class Misc(commands.Cog):
             + "\nYou can view all the commands with `@Sonus help`."
         )
         embed.colour = 2228207
+        embed.add_field(name="Version", value="v" + __version__)
+        embed.add_field(name="Servers", value=len(self.bot.guilds), inline=True)
+        embed.add_field(name="Latency", value="{:.3f}ms".format(self.bot.latency * 1000))
         await ctx.send(
             embed=embed,
             components=[
