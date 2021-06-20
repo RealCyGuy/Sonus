@@ -4,12 +4,14 @@ import os
 import string
 
 import discord
+import sentry_sdk
 from discord.ext import commands, tasks
 from discord_components import DiscordComponents
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
 load_dotenv()
+sentry_sdk.init(traces_sample_rate=1.0, release=__version__)
 
 
 class Sonus(commands.Bot):
@@ -113,7 +115,11 @@ class Sonus(commands.Bot):
                     msg += check.fail_msg + " "
             await context.send(msg)
         else:
-            print("Unexpected exception:", type(exception).__name__ + ":", exception)
+            # print("Unexpected exception:", type(exception).__name__ + ":", exception)
+            raise exception
+
+    async def on_error(self, event_method, *args, **kwargs):
+        raise
 
     async def on_voice_state_update(
         self,

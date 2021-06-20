@@ -3,3 +3,4 @@ python-dotenv
 motor
 dnspython
 discord-components
+sentry-sdk
