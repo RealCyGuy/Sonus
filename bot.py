@@ -155,7 +155,10 @@ class Sonus(commands.Bot):
                     + "'s voice call"
                 )
                 await channel.edit(position=after.channel.position + 1)
-                await member.move_to(channel)
+                try:
+                    await member.move_to(channel)
+                except:
+                    return await channel.delete()
                 server["channels"][str(channel.id)] = {
                     "creator": member.id,
                     "autochannel": after.channel.id,
