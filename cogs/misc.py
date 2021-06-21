@@ -1,9 +1,11 @@
+from datetime import datetime
 from difflib import get_close_matches
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord_components import ButtonStyle, Button
+from humanize import precisedelta
 
 from bot import __version__
 
@@ -133,7 +135,12 @@ class Misc(commands.Cog):
         embed.colour = 2228207
         embed.add_field(name="Version", value="v" + __version__)
         embed.add_field(name="Servers", value=len(self.bot.guilds), inline=True)
-        embed.add_field(name="Latency", value="{:.3f}ms".format(self.bot.latency * 1000))
+        embed.add_field(
+            name="Latency", value="{:.3f}ms".format(self.bot.latency * 1000)
+        )
+        embed.add_field(
+            name="Uptime", value=precisedelta(datetime.now() - self.bot.startup)
+        )
         await ctx.send(
             embed=embed,
             components=[

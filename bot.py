@@ -2,6 +2,7 @@ __version__ = "1.2.3"
 
 import os
 import string
+from datetime import datetime
 
 import discord
 import sentry_sdk
@@ -25,6 +26,9 @@ class Sonus(commands.Bot):
             *args,
             **kwargs,
         )
+        # Startup time
+        self.startup = datetime.now()
+        # Cogs
         self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
