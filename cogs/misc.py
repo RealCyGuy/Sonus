@@ -180,7 +180,7 @@ class Misc(commands.Cog):
             + "&permissions=285280272&scope=bot"
         )
 
-    @commands.command(aliases=["source"])
+    @commands.command(aliases=["source", "gh"])
     @commands.cooldown(1, 4, commands.BucketType.member)
     async def github(self, ctx: Context):
         """

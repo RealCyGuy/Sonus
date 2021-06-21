@@ -9,7 +9,7 @@ class Edit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["name"])
+    @commands.command(aliases=["name", "n"])
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     @commands.guild_only()
@@ -26,7 +26,7 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Renamed channel to `{name}`.")
 
-    @commands.command(aliases=["lock"])
+    @commands.command(aliases=["lock", "l"])
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     @commands.guild_only()
@@ -50,7 +50,7 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Changed limit to `{limit}`.")
 
-    @commands.command(aliases=["rate"])
+    @commands.command(aliases=["rate", "br"])
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     @commands.guild_only()
@@ -69,7 +69,7 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Changed bitrate to `{rate}` kbps.")
 
-    @commands.command()
+    @commands.command(aliases=["b"])
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     @commands.guild_only()
@@ -95,7 +95,7 @@ class Edit(commands.Cog):
             return await ctx.send("An error occured: " + str(e))
         await ctx.send(f"Banned {name}.")
 
-    @commands.command()
+    @commands.command(aliases=["ub"])
     @commands.cooldown(1, 10, commands.BucketType.member)
     @is_channel_owner()
     @commands.guild_only()

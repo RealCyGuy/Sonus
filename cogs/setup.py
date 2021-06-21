@@ -6,7 +6,7 @@ class Setup(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["start"])
     @commands.has_permissions(manage_guild=True)
     @commands.guild_only()
     async def create(self, ctx: Context):
