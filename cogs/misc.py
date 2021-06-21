@@ -129,8 +129,8 @@ class Misc(commands.Cog):
         {prefix}about
         """
         embed = discord.Embed(
-            description="Sonus is a fast, simple, and open-source auto voice channel discord bot created by Cyrus Yip."
-            + "\nYou can view all the commands with `@Sonus help`."
+            description="Sonus is a fast, simple, and open-source auto voice channel discord bot created by Cyrus Yip. "
+            + "You can view all the commands with `@Sonus help`."
         )
         embed.colour = 2228207
         embed.add_field(name="Version", value="v" + __version__)
