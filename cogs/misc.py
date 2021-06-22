@@ -1,3 +1,5 @@
+import inspect
+import os
 from datetime import datetime
 from difflib import get_close_matches
 
@@ -5,6 +7,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord_components import ButtonStyle, Button
+from disputils import BotEmbedPaginator
 from humanize import precisedelta
 
 from bot import __version__
@@ -180,17 +183,75 @@ class Misc(commands.Cog):
             + "&permissions=285280272&scope=bot"
         )
 
-    @commands.command(aliases=["source", "gh"])
+    @commands.command(aliases=["github", "gh"])
     @commands.cooldown(1, 4, commands.BucketType.member)
-    async def github(self, ctx: Context):
+    async def source(self, ctx: Context, command=None):
         """
-        Get the link to the GitHub repository.
+        Get the source code of a command. 
         ~
-        {prefix}github
+        {prefix}source
+        {prefix}source rename
         """
-        await ctx.send(
-            "You can find the source here: https://github.com/realcyguy/sonus"
+        # await ctx.send(
+        #     "You can find the source here: https://github.com/realcyguy/sonus"
+        # )
+        source_url = "https://github.com/RealCyGuy/Sonus"
+        prefix = "@" + self.bot.user.name + " "
+        if command is None:
+            embed = discord.Embed(
+                title="Sonus's Source Code",
+                description=source_url
+                + "\n\n"
+                + "To get the source code for a specific command, use "
+                f"`{prefix}{ctx.invoked_with} [command]`",
+                colour=2228207,
+            )
+            await ctx.send(embed=embed)
+            return
+
+        obj = self.bot.get_command(command)
+        if obj is None:
+            return await ctx.send("Command not found!")
+
+        src = obj.callback.__code__
+        lines, file_start = inspect.getsourcelines(src)
+        sourcecode = inspect.getsource(src).replace("```", "")
+        if obj.callback.__module__.startswith("discord"):
+            location = obj.callback.__module__.replace(".", "/") + ".py"
+            source_url = "https://github.com/Rapptz/discord.py"
+            branch = "master"
+        else:
+            location = os.path.relpath(src.co_filename).replace("\\", "/")
+            branch = "main"
+
+        embed = discord.Embed(
+            title=f"Source code of {prefix}{command}.", colour=2228207
         )
+
+        sourcecode = sourcecode.splitlines(True)
+        for index, line in enumerate(sourcecode):
+            if line.startswith(" " * 4):
+                sourcecode[index] = line[4:]
+        sourcecode = "".join(sourcecode)
+
+        file_end = file_start + len(lines) - 1
+        link = "{}/blob/{}/{}#L{}-L{} ".format(
+            source_url, branch, location, file_start, file_end
+        )
+        embeds = []
+        msg = "```py\n"
+        lines = sourcecode.splitlines(True)
+        for index, line in enumerate(lines + [""]):
+            if msg != "```py\n":
+                if len(link) + len(line) + len(msg) + 3 > 2000 or index == len(lines):
+                    msg += "```"
+                    page = embed.copy()
+                    page.description = link + msg
+                    embeds.append(page)
+                    msg = "```py\n"
+            msg += line
+        paginator = BotEmbedPaginator(ctx, embeds)
+        await paginator.run()
 
 
 def setup(bot):

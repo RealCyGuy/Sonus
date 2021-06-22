@@ -5,3 +5,4 @@ dnspython
 discord-components
 sentry-sdk
 humanize
+disputils
