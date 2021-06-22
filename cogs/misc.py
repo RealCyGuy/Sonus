@@ -254,7 +254,7 @@ class Misc(commands.Cog):
         # paginator = BotEmbedPaginator(ctx, pages)
         # await paginator.run()
         message = await ctx.send(
-            embed=pages[0].copy().set_footer(text="1/" + str(len(pages)))
+            embed=pages[0].copy().set_footer(text="1/" + str(len(pages)) + "pages")
         )
         reactions = ["◀", "▶"]
         for re in reactions:
@@ -281,7 +281,7 @@ class Misc(commands.Cog):
                         await message.edit(
                             embed=pages[page]
                             .copy()
-                            .set_footer(text=str(page + 1) + "/" + str(len(pages)))
+                            .set_footer(text=str(page + 1) + "/" + str(len(pages)) + "pages")
                         )
                         try:
                             await message.remove_reaction(
