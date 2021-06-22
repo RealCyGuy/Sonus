@@ -251,8 +251,6 @@ class Misc(commands.Cog):
                     pages.append(page)
                     msg = "```py\n"
             msg += line
-        # paginator = BotEmbedPaginator(ctx, pages)
-        # await paginator.run()
         message = await ctx.send(
             embed=pages[0].copy().set_footer(text="1/" + str(len(pages)) + "pages")
         )
