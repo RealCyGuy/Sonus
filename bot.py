@@ -105,9 +105,10 @@ class Sonus(commands.Bot):
             await context.send(
                 f"This command is on cooldown. Try again in {exception.retry_after:.2f}s."
             )
+        elif isinstance(exception, commands.NoPrivateMessage):
+            await context.send("You can't use this command in private messages.")
         elif (
             isinstance(exception, commands.MissingPermissions)
-            or isinstance(exception, commands.NoPrivateMessage)
             or isinstance(exception, commands.CommandOnCooldown)
             or isinstance(exception, commands.MemberNotFound)
         ):
