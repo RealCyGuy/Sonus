@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import os
 from datetime import datetime
@@ -187,7 +188,7 @@ class Misc(commands.Cog):
     @commands.cooldown(1, 4, commands.BucketType.member)
     async def source(self, ctx: Context, command=None):
         """
-        Get the source code of a command. 
+        Get the source code of a command.
         ~
         {prefix}source
         {prefix}source rename
@@ -238,7 +239,7 @@ class Misc(commands.Cog):
         link = "{}/blob/{}/{}#L{}-L{} ".format(
             source_url, branch, location, file_start, file_end
         )
-        embeds = []
+        pages = []
         msg = "```py\n"
         lines = sourcecode.splitlines(True)
         for index, line in enumerate(lines + [""]):
@@ -247,11 +248,54 @@ class Misc(commands.Cog):
                     msg += "```"
                     page = embed.copy()
                     page.description = link + msg
-                    embeds.append(page)
+                    pages.append(page)
                     msg = "```py\n"
             msg += line
-        paginator = BotEmbedPaginator(ctx, embeds)
-        await paginator.run()
+        # paginator = BotEmbedPaginator(ctx, pages)
+        # await paginator.run()
+        message = await ctx.send(
+            embed=pages[0].copy().set_footer(text="1/" + str(len(pages)))
+        )
+        reactions = ["◀", "▶"]
+        for re in reactions:
+            await message.add_reaction(re)
+
+        def check(r, u):
+            return r.message.id == message.id and u == ctx.author
+
+        page = 0
+        while True:
+            try:
+                reaction, _ = await self.bot.wait_for(
+                    "reaction_add", timeout=5.0, check=check
+                )
+                if reaction.emoji in reactions:
+                    reaction_index = -1
+                    if reaction.emoji == reactions[0] and page > 0:
+                        page -= 1
+                        reaction_index = 0
+                    if reaction.emoji == reactions[1] and page < len(pages) - 1:
+                        page += 1
+                        reaction_index = 1
+                    if reaction_index >= 0:
+                        await message.edit(
+                            embed=pages[page]
+                            .copy()
+                            .set_footer(text=str(page + 1) + "/" + str(len(pages)))
+                        )
+                        try:
+                            await message.remove_reaction(
+                                reactions[reaction_index], ctx.author
+                            )
+                        except discord.Forbidden:
+                            pass
+            except asyncio.TimeoutError:
+                for re in reactions:
+                    await message.remove_reaction(re, self.bot.user)
+                    try:
+                        await message.remove_reaction(re, ctx.author)
+                    except discord.Forbidden:
+                        pass
 
 
 def setup(bot):
