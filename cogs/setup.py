@@ -29,10 +29,10 @@ class Setup(commands.Cog):
             f"Created voice channel with an id of `{channel.id}`. You can rename and move it and I'll automatically create voice channels!"
         )
 
-    @commands.command(aliases=["tp"])
-    @commands.has_permissions(manage_guild=True)
-    @commands.guild_only()
-    async def toggleposition(self, ctx: Context):
+    # @commands.command(aliases=["tp"])
+    # @commands.has_permissions(manage_guild=True)
+    # @commands.guild_only()
+    # async def toggleposition(self, ctx: Context):
         """
         Change the position of created channels.
 
@@ -47,7 +47,7 @@ class Setup(commands.Cog):
         #     {"$set": {"autochannels": server["autochannels"]}},
         #     upsert=True,
         # )
-        await ctx.send("a")
+        # await ctx.send("a")
 
 
 def setup(bot):
