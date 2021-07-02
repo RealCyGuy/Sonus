@@ -252,7 +252,7 @@ class Misc(commands.Cog):
                     msg = "```py\n"
             msg += line
         message = await ctx.send(
-            embed=pages[0].copy().set_footer(text="1/" + str(len(pages)) + "pages")
+            embed=pages[0].copy().set_footer(text="1/" + str(len(pages)) + " pages")
         )
         reactions = ["◀", "▶"]
         for re in reactions:
@@ -265,7 +265,7 @@ class Misc(commands.Cog):
         while True:
             try:
                 reaction, _ = await self.bot.wait_for(
-                    "reaction_add", timeout=5.0, check=check
+                    "reaction_add", timeout=60.0, check=check
                 )
                 if reaction.emoji in reactions:
                     reaction_index = -1
@@ -279,7 +279,7 @@ class Misc(commands.Cog):
                         await message.edit(
                             embed=pages[page]
                             .copy()
-                            .set_footer(text=str(page + 1) + "/" + str(len(pages)) + "pages")
+                            .set_footer(text=str(page + 1) + "/" + str(len(pages)) + " pages")
                         )
                         try:
                             await message.remove_reaction(
