@@ -29,7 +29,7 @@ class Sonus(commands.Bot):
         # Startup time
         self.startup = datetime.now()
         # Cogs
-        self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc"]
+        self.loading_cogs = ["cogs.setup", "cogs.edit", "cogs.misc", "jishaku"]
         # Init mongodb
         self.mongo_uri = os.environ.get("MONGO_URI", None)
         if self.mongo_uri is None or len(self.mongo_uri.strip()) == 0:
