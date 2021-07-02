@@ -8,7 +8,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord_components import ButtonStyle, Button
-from disputils import BotEmbedPaginator
 from humanize import precisedelta
 
 from bot import __version__
