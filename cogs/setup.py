@@ -12,6 +12,8 @@ class Setup(commands.Cog):
     async def create(self, ctx: Context):
         """
         Create an auto voice channel.
+
+        hello :)
         ~
         {prefix}create
         """

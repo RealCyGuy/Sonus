@@ -175,6 +175,8 @@ class Misc(commands.Cog):
     async def invite(self, ctx: Context):
         """
         Get the invite link of the bot.
+
+        Why are you looking at the help for invite??
         ~
         {prefix}invite
         """
@@ -189,6 +191,8 @@ class Misc(commands.Cog):
     async def source(self, ctx: Context, command=None):
         """
         Get the source code of a command.
+
+        Use it by itself to get the GitHub link.
         ~
         {prefix}source
         {prefix}source rename
