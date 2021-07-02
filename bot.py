@@ -150,7 +150,13 @@ class Sonus(commands.Bot):
                 )
         if after.channel:
             if str(after.channel.id) in server["autochannels"]:
+                autochannel = after.channel.id
                 # joined creating channel
+                position_bottom = True
+                if server["autochannels"][str(autochannel)]:
+                    config = server["autochannels"][str(autochannel)]
+
+                    position_bottom = config.get("positionbottom", True)
                 channel = await after.channel.clone(
                     name="".join(
                         letter
@@ -159,14 +165,14 @@ class Sonus(commands.Bot):
                     )
                     + "'s voice call"
                 )
-                await channel.edit(position=after.channel.position + 1)
+                await channel.edit(position=after.channel.position + position_bottom)
                 try:
                     await member.move_to(channel)
                 except:
                     return await channel.delete()
                 server["channels"][str(channel.id)] = {
                     "creator": member.id,
-                    "autochannel": after.channel.id,
+                    "autochannel": autochannel,
                 }
                 await self.servers.find_one_and_update(
                     {"_id": str(member.guild.id)},
