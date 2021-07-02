@@ -33,21 +33,31 @@ class Setup(commands.Cog):
     # @commands.has_permissions(manage_guild=True)
     # @commands.guild_only()
     # async def toggleposition(self, ctx: Context):
-        """
-        Change the position of created channels.
+    #     """
+    #     Change the position of created channels.
+    #
+    #     You have to be in a channel created by the auto voice channel you want to change.
+    #     ~
+    #     {prefix}toggleposition
+    #     """
+    #     if not ctx.author.voice:
+    #         return await ctx.send(
+    #             "You have to be in a voice channel to use this command."
+    #         )
+    #     server = await self.bot.get_server(ctx.guild.id)
+    #     try:
+    #         channel = server["channels"][str(ctx.author.voice.channel.id)]
+    #     except KeyError:
+    #         return await ctx.send(
+    #             "You have to be in a voice channel created by me to use this command."
+    #         )
+    #     autochannel = server["autochannels"][str(channel["autochannel"])]
 
-        You have to be in a channel created by the auto voice channel you want to change.
-        ~
-        {prefix}toggleposition
-        """
-        # server = await self.bot.get_server(ctx.guild.id)
-        # server["autochannels"][str(channel.id)] = None
         # await self.bot.servers.find_one_and_update(
         #     {"_id": str(ctx.guild.id)},
         #     {"$set": {"autochannels": server["autochannels"]}},
         #     upsert=True,
         # )
-        # await ctx.send("a")
 
 
 def setup(bot):
