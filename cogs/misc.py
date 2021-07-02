@@ -282,7 +282,9 @@ class Misc(commands.Cog):
                         await message.edit(
                             embed=pages[page]
                             .copy()
-                            .set_footer(text=str(page + 1) + "/" + str(len(pages)) + " pages")
+                            .set_footer(
+                                text=str(page + 1) + "/" + str(len(pages)) + " pages"
+                            )
                         )
                         try:
                             await message.remove_reaction(
