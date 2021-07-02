@@ -51,7 +51,10 @@ class Setup(commands.Cog):
             return await ctx.send(
                 "You have to be in a voice channel created by me to use this command."
             )
-        autochannel = server["autochannels"][str(channel["autochannel"])]
+        try:
+            autochannel = server["autochannels"][str(channel["autochannel"])]
+        except:
+            return await ctx.send("Original auto channel not found.")
         position_bottom = True
         if autochannel:
             position_bottom = autochannel.get("positionbottom", True)
