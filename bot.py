@@ -37,6 +37,8 @@ class Sonus(commands.Bot):
             raise RuntimeError
         self.db = AsyncIOMotorClient(self.mongo_uri).sonus
         self.servers = self.db.servers
+        # Get invite link
+        self.invite = os.environ.get("INVITE_LINK", None)
         # Startup message
         print("=" * 24)
         print("Sonus")
@@ -92,6 +94,12 @@ class Sonus(commands.Bot):
         print(f"Bot version: {__version__}")
         print("-" * 24)
         print("I am logged in and ready!")
+        if not self.invite:
+            self.invite = (
+                "https://discord.com/oauth2/authorize?client_id="
+                + str(self.user.id)
+                + "&permissions=285288464&scope=bot"
+            )
         await self.update_status.start()
 
     async def on_command_error(self, context, exception):

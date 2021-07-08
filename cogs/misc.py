@@ -148,13 +148,7 @@ class Misc(commands.Cog):
             embed=embed,
             components=[
                 [
-                    Button(
-                        style=ButtonStyle.URL,
-                        label="Invite",
-                        url="https://discord.com/oauth2/authorize?client_id="
-                        + str(self.bot.user.id)
-                        + "&permissions=285280272&scope=bot",
-                    ),
+                    Button(style=ButtonStyle.URL, label="Invite", url=self.bot.invite,),
                     Button(
                         style=ButtonStyle.URL,
                         label="GitHub",
@@ -179,11 +173,7 @@ class Misc(commands.Cog):
         ~
         {prefix}invite
         """
-        await ctx.send(
-            "Here's my invite link: https://discord.com/oauth2/authorize?client_id="
-            + str(self.bot.user.id)
-            + "&permissions=285288464&scope=bot"
-        )
+        await ctx.send(f"Here's my invite link: {self.bot.invite}")
 
     @commands.command(aliases=["github", "gh"])
     @commands.cooldown(1, 4, commands.BucketType.member)
